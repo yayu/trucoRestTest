@@ -3,11 +3,16 @@ package ar.com.truco;
 public class Carta {
 
 	public enum Palo {
-		ESPADA, ORO, COPA, BASTO
+		ESPADA, ORO, COPA, BASTO,NOSET
 	}
-	private Palo palo;
+	private Palo palo = Palo.NOSET;
 	private int numero = 0;
-	
+
+	public Carta(){}
+	public Carta(Palo p, int numero){
+		palo = p;
+		this.numero = numero;
+	}
 	/**
 	 * Valor de la carta con respecto a la de entrada.
 	 * @param carta
@@ -22,10 +27,22 @@ public class Carta {
 		return numero;
 	}
 	
+	public void setNro(int n){
+		this.numero = n;
+	}
 	public Palo getPalo(){
 		return palo;
 	}
 	
+	public void setPalo(Palo p){
+		palo = p;
+	}
+	
+	/**
+	 * Retorna la posicion de la carta en la jerarquia del truco.
+	 * @param carta
+	 * @return
+	 */
 	public static int getPos(Carta carta){
 		int value=-1;
 		 switch (carta.getNro()){
@@ -58,5 +75,13 @@ public class Carta {
 		}
 		
 		return value;
+	}
+	
+	public boolean equals(Carta carta){
+		if (carta == null){
+			return false;
+		}else{
+			return ((this.palo == carta.getPalo()) && (this.numero == carta.getNro()));
+		}
 	}
 }

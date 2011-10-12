@@ -2,10 +2,52 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
+<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
 <title>Insert title here</title>
+<script src="js/jquery.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+   $('input#send').click(function(){
+      $.ajax({url: 'rest/game/add',
+    	  dataType: 'json',
+          type: 'POST',
+          data: "name=" + $('input#name').val(),
+          success: function(msg){
+        	  //{"id":1,"userName":"pepe"}
+        	  $('#player_name').val(msg.userName);
+        	  $('#player_id').val(msg.id);
+        //	  alert(msg.id);
+        //	  alert(msg.userName);
+          }
+      })
+   })
+   $('input#listUser').click(function(){
+	   $.ajax({url: 'rest/game/users',
+	          type: 'GET',
+	          success: function(msg){
+	            alert(msg);
+	          }
+	      })
+   })
+})
+</script>
 </head>
 <body>
 Gran Truco Tresarroyense for Export!<br>
 Este es el truco de la gente!
+<div id="user">
+<p>Conectarse al sistema</p>
+<input id="name" type="text"></input>
+<input id="send" type="button" value="Conectar"></input>
+</div>
+<div id="player">
+<p>Descripcion del jugador</p>
+   <input id="player_name" type="text" readonly="readonly"/>
+   <input id="player_id" type="hidden"/>
+</div>
+<div id="users">
+<p>Usuarios disponibles</p>
+<input id="listUser" type="button" value="listar usuarios"/>
+</div>
 </body>
 </html>

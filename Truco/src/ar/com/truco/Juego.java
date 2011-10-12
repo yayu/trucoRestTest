@@ -11,17 +11,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 @Path("/game")
 public class Juego {
-
-	/**
-	 * Id del oponente del juego.
-	 */
-	private int oponente = -1;
-	/**
-	 * indico el id del jugador que debe jugar.
-	 */
-	private int turno = 0;
 	
 	@GET
 	@Produces("text/plain")
@@ -34,8 +28,8 @@ public class Juego {
 	@Produces("text/plain")
 	public String addUser(@FormParam("name") String name){
 		//TODO agregar una persona al juego.
-		TrucoManager.addUser(name);	
-		return "debo agregar una persona";
+		Participante jug = TrucoManager.addUser(name);	
+		return jug.toString();
 	}
 	
 	@Path("/delete")
@@ -46,9 +40,14 @@ public class Juego {
 		return "debo eliminar a un usuario del juego";
 	}
 	
-	public List<Participante> gamers(){
-		List<Participante> res = new ArrayList<Participante>();
-		
-		return res;
+	@Path("/users")
+	@GET
+	@Produces("text/plain")
+	public String gamers(){
+		JSONArray res = new JSONArray();
+		for(Participante p : TrucoManager.getUsers()){
+			res.add(p);
+		}
+		return res.toJSONString();
 	}
 }
