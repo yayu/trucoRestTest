@@ -16,6 +16,7 @@ public class Participante {
 	private Partida partida = null;
 	private POSICION posicion=null;
 	private Set<Participante> interesados = new HashSet<Participante>();
+	private List<Carta> cartas = null;
 	
 	public void setUserName(String name){
 		this.userName = name;
@@ -29,11 +30,21 @@ public class Participante {
 	public int getId(){
 		return id;
 	}
-	public void setPartidaId(Partida p){
+	public void setPartida(Partida p) throws Exception{
+		if (partida != null)
+			throw new Exception("Ya se encuentra Jugando");
 		this.partida = p;
 	}
 	public void setPosicion(POSICION i){
 		posicion = i;
+	}
+	
+	public void setCartas(List<Carta> cartas){
+		this.cartas = cartas;
+	}
+	
+	public List<Carta> getCartas(){
+		return cartas;
 	}
 	
 	/**
@@ -44,8 +55,15 @@ public class Participante {
 		return posicion;
 	}
 	
-	public void invitar(Participante player) throws Exception{
-		//TODO implementarlo.
+	public void invitarAJugar(Participante player) throws Exception{
+		if (partida == null){
+			player.addSolicitudJuego(this);
+		}else{
+			throw new Exception("Estoy jugando.");
+		}
+	}
+	
+	public void addSolicitudJuego(Participante player) throws Exception{
 		if (partida == null){
 			interesados.add(player);
 		}else{
@@ -75,9 +93,45 @@ public class Participante {
 		Participante player = TrucoManager.getUser(playerId);
 		if (!player.isGaming()){
 			//TODO
+			TrucoManager.setPartida(this, player);
+			interesados.remove(player);
+			result = true;
 		}
 		return result;
 	}
+	
+	public boolean miTurno(){
+		boolean result = false;
+		if (partida != null){
+			//TODO: Terminar de resolver miTurno.
+			//partida.turnoPlayer(posicion);
+		}
+		return result;
+	}
+	
+	/**
+	 * Se arroja la carta de la posicion 'cartaPos' a la mesa.
+	 * @param cartaPos
+	 * @throws IndexOutOfBoundsException
+	 */
+	public void tirarCarta(int cartaPos) throws IndexOutOfBoundsException {
+		if (partida != null){
+			partida.tirarCarta(this, this.cartas.get(cartaPos));
+			cartas.remove(cartaPos);
+		}else{
+			//TODO lanza excepcion
+			System.out.println("El juegados no tiene partida asociada e intenta tirar una carta.");
+		}
+	}
+	
+	public int getPuntaje(){
+		int resultado = -1;
+		if (partida != null){
+			resultado = partida.getPuntaje(this);
+		}
+		return resultado;
+	}
+	
 	/**
 	 * retorna un objecto JSON
 	 */

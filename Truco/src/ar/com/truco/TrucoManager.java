@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 import ar.com.truco.Carta.Palo;
+import ar.com.truco.exceptions.TrucoException;
 
 /**
  * Administración del juego.
@@ -26,6 +27,7 @@ public class TrucoManager {
 	 * quien tira, quien canto, que debería seguir.
 	 */
 	private static HashMap juegos = new HashMap();
+	private static int idGames = 0;
 	
 	/**
 	 * Retorna una lista de 4 distintas cartas. Para jugar 2 jugadores.
@@ -40,7 +42,7 @@ public class TrucoManager {
 		List<Carta> res = new ArrayList<Carta>(toReturn);
 		// selecciono las cartas.
 		for (int i=0; i<toReturn ; i++){
-			int palo = (r.nextInt(40) % 4);
+			int palo = (r.nextInt(4) % 4);
 			int nro = (r.nextInt(40) % 10);
 			int index = palo*10+nro;
 			if (!maso[index]){
@@ -114,5 +116,20 @@ public class TrucoManager {
 	}
 	public static Participante getUser(int userId){
 		return ((Participante)usuarios.get(userId));
+	}
+	
+	public static void setPartida(Participante playerA, Participante playerB){
+		Partida partida = new Partida();
+		try{
+			partida.setJugador(playerA);
+			partida.setJugador(playerB);
+			playerA.setPartida(partida);
+			playerB.setPartida(partida);
+			partida.darMano();
+			//TODO ver si vale la pena contar con este valor.
+			juegos.put(idGames++, partida); 
+		}catch(Exception e){
+			System.out.println("Error al setear una partida.");
+		}
 	}
 }

@@ -44,15 +44,51 @@ public class Partida {
 		}
 	}
 	
-	public void tirarCarta(Participante gamer, Carta carta){
-		if (turnoPlayerA){
+	public boolean turnoPlayer(Participante player){
+		//TODO Terminar de calcular el turno.
+		// turnoPlayerA && (player.getId == gamerA.getId()) 
+		return turnoPlayerA;
+	}
+	
+	public void darMano(){
+		List<Carta> cartas =  TrucoManager.avarajar(6);
+		List<Carta> l1 = new ArrayList<Carta>(3);
+		List<Carta> l2 = new ArrayList<Carta>(3);
+		for (int i=0; i<3; i++)
+			l1.add(cartas.get(i));
+		for(int i=3; i<6; i++)
+			l2.add(cartas.get(i));
+		System.out.println("cartas gamerA: "+ l1.size());
+		System.out.println("cartas gamerB: "+ l2.size());
+		gamerA.setCartas(l1);
+		gamerB.setCartas(l2);
+	}
+	public void tirarCarta(Participante gamer, Carta carta) {
+		if (turnoPlayerA && gamer.getPosicion() == POSICION.JUGADOR_A){
+			//TODO terminar de implementar.
 			turnoPlayerA = false;
-		}else{//turno del jugador B
+		}else if ((!turnoPlayerA) && (gamer.getPosicion() == POSICION.JUGADOR_B)){//turno del jugador B
 			turnoPlayerA=true;
+		}else{
+			System.out.println("Arrojo la carta cuando no es mi turno.");
+			//TODO terminar de implementar.
 		}
-		mano = mano.getNext();
 		cartas_mesa.add(carta);
+		if (cartas_mesa.size() % 2 == 0){
+			mano = mano.getNext();
+		}
 		evaluarPuntos();
+	}
+	
+	public int getPuntaje(Participante player){
+		//TODO devolver el puntaje del jugador.
+		int resultado = -1;
+		if (player.equals(gamerA)){
+			resultado = this.puntajeA;
+		}else if (player.equals(gamerB)){
+			resultado = this.puntajeB;
+		}
+		return resultado;
 	}
 	
 	private void evaluarPuntos() {
